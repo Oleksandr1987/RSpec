@@ -2,7 +2,6 @@ require_relative '../../../app/api'
 require 'rack/test'
 
 module ExpenseTracker
-  RecordResult = Struct.new(:success?, :expense_id, :error_message)  
   
   RSpec.describe API do
   include Rack::Test::Methods
@@ -19,7 +18,7 @@ module ExpenseTracker
           let(:expense) { { 'some' => 'data'} }
           
           before do
-            allow(ledger).to receive(:record).with(expense).and_return(RacordResult.new(true, 417, nil))
+            allow(ledger).to receive(:record).with(expense).and_return(RecordResult.new(true, 417, nil))
           end
 
           it 'return the expense id' do
@@ -40,12 +39,24 @@ module ExpenseTracker
         end
 
         context 'when the expense fails validation' do
-          it 'returns an error message'
-          it 'response with a 422 (Unprocessable entity)'
-        end
+          let(:expense) { {'some' => 'data'} }
 
+          before do
+            allow(ledger).to receive(:record).with(expense).and_return(RecordResult.new(false, 417, 'Expense incomplete'))
+          end
 
-      
+          it 'returns an error message' do 
+            post '/expenses', JSON.generate(expense)
+
+            parsed = JSON.parse(last_response.body)
+            expect(parsed).to include('error' => 'Expense incomplete')
+          end
+
+          it 'response with a 422 (Unprocessable entity)' do 
+            post '/expenses', JSON.generate(expense)
+            expect(last_response.status).to eq(422)
+          end
+        end  
     end
   end
 end
