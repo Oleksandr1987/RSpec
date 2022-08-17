@@ -9,14 +9,15 @@ module ExpenseTracker
   def app
     API.new(ledger: ledger)
   end
-
+#let definition
   let(:ledger) { instance_double('ExpenseTracker::Ledger') }
+  let(:expense) { { 'some' => 'data' } }
 
     describe 'POST /expenses' do
       
         context 'when the expense is successfully recorded' do
           let(:expense) { { 'some' => 'data'} }
-          
+          #hook
           before do
             allow(ledger).to receive(:record).with(expense).and_return(RecordResult.new(true, 417, nil))
           end
@@ -58,5 +59,9 @@ module ExpenseTracker
           end
         end  
     end
+  end
+#helper method
+  def parsed_last_response
+    JSON.parse(last_response.body)
   end
 end

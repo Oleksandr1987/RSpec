@@ -53,6 +53,15 @@ RSpec.configure do |config|
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
+# Rspec.configure do |rspec|
+#   rspec.alias_example_group_to :pdescribe, pry: true
+#   rspec.alias_example_to :pit, pry: true
+#   rspec.after(:example, pry: true) do |ex|
+#     require 'pry'
+#     bindinf.pry
+#   end
+# end
+
 =begin
   # This allows you to limit a spec run to individual examples or groups
   # you care about by tagging them with `:focus` metadata. When nothing
